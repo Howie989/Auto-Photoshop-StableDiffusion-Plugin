@@ -1,30 +1,16 @@
 const io = require('../io')
 
-function getUseSharpMask() {
-    const isChecked = document.getElementById('chUseSharpMask').checked
-    return isChecked
-}
 function setUseSharpMask() {
     console.warn('setUseSharpMask is not setup')
-}
-
-function getUseLiveProgressImage() {
-    const b_live_update = document.getElementById('chLiveProgressImage').checked
-    return b_live_update
-}
-function setUseLiveProgressImage(b_live_update) {
-    document.getElementById('chLiveProgressImage').checked = b_live_update
-}
-
-function getExtensionType() {
-    return [...document.getElementsByClassName('rbExtensionType')].filter(
-        (e) => e.checked == true
-    )[0].value
 }
 
 document.getElementById('btnGetDocPath').addEventListener('click', async () => {
     const docPath = await io.IOFolder.getDocumentFolderNativePath()
     document.getElementById('tiDocPath').value = docPath
+
+    const uuid = await getUniqueDocumentId()
+    doc_entry = await io.IOFolder.getDocFolder(uuid)
+    await shell.openPath(doc_entry.nativePath)
 })
 
 document.getElementById('btnSdUrl').addEventListener('click', async () => {
@@ -61,8 +47,8 @@ async function changeSdUrl(sd_url) {
 
 async function saveSettings() {
     const settings_tab_settings = {
-        use_sharp_mask: getUseSharpMask(),
-        extension_type: getExtensionType(),
+        use_sharp_mask: settings_tab_ts.store.data.use_sharp_mask,
+        extension_type: settings_tab_ts.store.data.extension_type,
         sd_url: getSdUrlHtml(),
     }
 
@@ -87,24 +73,6 @@ async function loadSettings() {
     }
 }
 
-document.getElementById('chUseSharpMask').addEventListener('change', (ev) => {
-    const isChecked = ev.target.checked
-    if (isChecked) {
-        document.getElementById('slMaskBlur').setAttribute('disabled')
-    } else {
-        document.getElementById('slMaskBlur').removeAttribute('disabled')
-    }
-})
-
-document.getElementById('chUseSmartObject').addEventListener('change', (ev) => {
-    const isChecked = ev.target.checked
-    if (isChecked) {
-        g_b_use_smart_object = true
-    } else {
-        g_b_use_smart_object = false
-    }
-})
-
 function getUseOriginalPrompt() {
     const b_use_original_prompt = document.getElementById(
         'chUseOriginalPrompt'
@@ -119,15 +87,13 @@ document
     })
 
 module.exports = {
-    getUseSharpMask,
     setUseSharpMask,
-    getExtensionType,
+
     getSdUrlHtml,
     setSdUrlHtml,
     changeSdUrl,
     loadSettings,
     saveSettings,
-    getUseLiveProgressImage,
-    setUseLiveProgressImage,
+
     getUseOriginalPrompt,
 }

@@ -2,10 +2,11 @@ const { cleanLayers } = require('../psapi')
 const psapi = require('../psapi')
 const io = require('./io')
 const Enum = require('../enum')
-const { ViewerManager } = require('../viewer')
+
 const { base64ToBase64Url } = require('./general')
 const html_manip = require('./html_manip')
 const layer_util = require('./layer')
+
 const SessionState = {
     Active: 'active',
     Inactive: 'inactive',
@@ -42,6 +43,7 @@ class GenerationSession {
         this.request_status = Enum.RequestStateEnum['Finished'] //finish or ideal state
         this.is_control_net = false
         this.control_net_selection_info
+        this.control_net_preview_selection_info
     }
     isActive() {
         return this.state === SessionState['Active']
@@ -58,89 +60,7 @@ class GenerationSession {
     name() {
         return `session - ${this.id}`
     }
-    async startSession() {
-        this.id += 1 //increment the session id for each session we start
-        this.activate()
-        this.isFirstGeneration = true // only before the first generation is requested should this be true
 
-        console.log('current session id: ', this.id)
-        try {
-            const session_name = this.name()
-            const activeLayers = await app.activeDocument.activeLayers
-            await psapi.unselectActiveLayersExe() // unselect all layer so the create group is place at the top of the document
-            this.prevOutputGroup = this.outputGroup
-            const outputGroup = await psapi.createEmptyGroup(session_name)
-            this.outputGroup = outputGroup
-            await psapi.selectLayersExe(activeLayers)
-        } catch (e) {
-            console.warn(e)
-        }
-    }
-
-    async endSession(garbage_collection_state) {
-        try {
-            if (!this.isActive()) {
-                //return if the session is not active
-                return null
-            }
-            this.state = SessionState['Inactive'] // end the session by deactivate it
-
-            this.deactivate()
-
-            if (garbage_collection_state === GarbageCollectionState['Accept']) {
-                await acceptAll()
-            } else if (
-                garbage_collection_state === GarbageCollectionState['Discard']
-            ) {
-                //this should be discardAll()
-
-                await discardAll()
-            } else if (
-                garbage_collection_state ===
-                GarbageCollectionState['DiscardSelected']
-            ) {
-                //this should be discardAllExcept(selectedLayers)
-                await discardSelected() //this will discard what is not been highlighted
-            } else if (
-                garbage_collection_state ===
-                GarbageCollectionState['AcceptSelected']
-            ) {
-                //this should be discardAllExcept(selectedLayers)
-                await discard() //this will discard what is not been highlighted
-            }
-
-            //delete the old selection area
-            // g_generation_session.selectionInfo = {}
-
-            this.isFirstGeneration = true // only before the first generation is requested should this be true
-            // const is_visible = await this.outputGroup.visible
-            g_viewer_manager.last_selected_viewer_obj = null // TODO: move this in viewerManager endSession()
-            g_viewer_manager.onSessionEnd()
-            await layer_util.collapseFolderExe([this.outputGroup], false) // close the folder group
-            // this.outputGroup.visible = is_visible
-
-            if (
-                this.mode === generationMode['Inpaint'] &&
-                g_sd_mode === generationMode['Inpaint']
-            ) {
-                //create "Mask -- Paint White to Mask -- temporary" layer if current session was inpiant and the selected session is inpaint
-                // the current inpaint session ended on inpaint
-                g_b_mask_layer_exist = false
-                await layer_util.deleteLayers([g_inpaint_mask_layer])
-                await createTempInpaintMaskLayer()
-            }
-            //delete controlNet image, Note: don't delete control net, let the user disable controlNet if doesn't want to use it
-            // this.controlNetImage = null
-            // html_manip.setControlImageSrc('https://source.unsplash.com/random')
-        } catch (e) {
-            console.warn(e)
-        }
-    }
-    // initializeInitImage(group, snapshot, solid_background, path) {
-    //     this.initGroup = group
-    //     this.init_solid_background = solid_background
-    //     this.InitSnapshot = snapshot
-    // }
     deleteInitImageLayers() {}
     async closePreviousOutputGroup() {
         try {
@@ -203,6 +123,7 @@ class GenerationSession {
         }
     }
     async deleteProgressImage() {
+        preview.store.updateProperty('image', null)
         this.deleteProgressImageHtml()
         await this.deleteProgressLayer()
     }
@@ -213,6 +134,7 @@ class GenerationSession {
         //get the selection from the canvas as base64 png, make sure to resize to the width and height slider
         const selectionInfo = await psapi.getSelectionInfoExe()
         this.control_net_selection_info = selectionInfo
+        this.control_net_preview_selection_info = selectionInfo
         // const base64_image = await io.IO.getSelectionFromCanvasAsBase64Silent(
         //     selectionInfo,
         //     true,
@@ -255,8 +177,280 @@ class GenerationSession {
     }
 }
 
+//REFACTOR: move to generation_settings.js
+async function getSettings(session_data) {
+    let payload = {}
+
+    try {
+        const extension_type = settings_tab_ts.store.data.extension_type // get the extension type
+        payload['selection_info'] = session_data?.selectionInfo
+        const numberOfBatchSize = parseInt(sd_tab_store.data.batch_size)
+
+        const prompt = multiPrompts.getPrompt().positive
+        const negative_prompt = multiPrompts.getPrompt().negative
+        const hi_res_fix = sd_tab_store.data.enable_hr
+
+        const upscaler = sd_tab_store.data.hr_upscaler
+        const cfg_scale = sd_tab_store.data.cfg
+
+        function calculateSeed(init_seed, batch_index, batch_size) {
+            if (init_seed === -1) return -1
+            // const seed = init_seed + batch_index * batch_size
+            const seed = init_seed + BigInt(batch_index) * BigInt(batch_size)
+            return seed
+        }
+
+        // const init_seed = parseInt(sd_tab_store.data.seed)
+        const init_seed = BigInt(sd_tab_store.data.seed)
+
+        const seed = calculateSeed(
+            init_seed,
+            g_current_batch_index,
+            numberOfBatchSize
+        )
+
+        const use_sharp_mask = settings_tab_ts.store.data.extension_type
+        const mask_blur = settings_tab_ts.store.data.use_sharp_mask
+            ? 0
+            : sd_tab_store.data.mask_blur
+        const mask_expansion = sd_tab_store.data.mask_expansion
+
+        const inpaint_full_res_padding =
+            sd_tab_store.data.inpaint_full_res_padding
+
+        // console.dir(numberOfImages)
+        const bUsePromptShortcut =
+            settings_tab_ts.store.data.use_prompt_shortcut
+        let prompt_shortcut_ui_dict = {}
+        try {
+            let prompt_shortcut_string =
+                document.getElementById('taPromptShortcut').value
+            prompt_shortcut_ui_dict = JSON.parse(prompt_shortcut_string)
+        } catch (e) {
+            console.warn(
+                `warning prompt_shortcut_ui_dict is not valid Json obj: ${e}`
+            )
+            prompt_shortcut_ui_dict = {}
+        }
+
+        // const slider_width = document.getElementById("slWidth").value
+        // gWidth = getWidthFromSlider(slider_width)
+        const original_width = sd_tab_store.data.width
+        const original_height = sd_tab_store.data.height
+
+        const width = general.nearestMultiple(original_width, 8)
+        const height = general.nearestMultiple(original_height, 8)
+
+        //const hScale = html_manip.getSliderSdValue_Old('hrScale',1)
+
+        const uniqueDocumentId = await getUniqueDocumentId()
+        const h_denoising_strength = sd_tab_store.data.hr_denoising_strength
+
+        //Note: store the sampler names in json file if auto is offline or auto api is unmounted
+
+        const sampler_name = sd_tab_store.data.sampler_name
+
+        const mode = session_data?.rb_mode || sd_tab_store.data.rb_mode // Use the 'rb_mode' from the session, if not available, fallback to the 'rb_mode' from the interface.
+
+        const b_restore_faces = sd_tab_store.data.restore_faces
+
+        let denoising_strength = h_denoising_strength
+        if (mode == 'inpaint' || mode == 'outpaint') {
+            payload['inpaint_full_res'] = sd_tab_store.data.inpaint_full_res
+
+            payload['inpaint_full_res_padding'] = inpaint_full_res_padding
+
+            payload['inpainting_fill'] = sd_tab_store.data.inpainting_fill
+            payload['mask_expansion'] = mask_expansion
+
+            payload['mask'] = session_data?.mask
+            payload['expanded_mask'] = session_data?.mask
+            if (
+                use_sharp_mask === false &&
+                payload['mask'] &&
+                mask_expansion > 0
+            ) {
+                //only if mask is available and sharp_mask is off
+                // use blurry and expanded mask
+
+                const expanded_mask = await py_re.maskExpansionRequest(
+                    payload['mask'],
+                    payload['mask_expansion'],
+                    mask_blur
+                )
+                if (expanded_mask) {
+                    payload['expanded_mask'] = expanded_mask
+                    payload['mask'] = expanded_mask
+                    session_store.data.expanded_mask = expanded_mask
+                }
+            }
+            // viewer.store.mask = payload['mask'] // make sure
+        }
+
+        if (mode == 'img2img' || mode == 'inpaint' || mode == 'outpaint') {
+            denoising_strength = sd_tab_store.data.denoising_strength
+            payload['denoising_strength'] = denoising_strength
+
+            payload['init_images'] = [session_data?.init_image]
+
+            if (settings_tab_ts.store.data.use_image_cfg_scale_slider) {
+                payload['image_cfg_scale'] = sd_tab_store.data.image_cfg_scale // we may need to check if model is pix2pix
+            }
+
+            if (
+                scripts.script_store.isInstalled() &&
+                scripts.script_store.is_active &&
+                scripts.script_store.selected_script_name !== 'None' &&
+                scripts.script_store.is_selected_script_available
+            ) {
+                payload['script_args'] = scripts.script_store.orderedValues()
+
+                payload['script_name'] =
+                    scripts.script_store.selected_script_name //'Ultimate SD upscale'
+            }
+        }
+
+        function setAlwaysOnScripts() {
+            const data = after_detailer_script.store.toJsFunc().data
+            // console.log('setAlwaysOnScripts=> data:', data)
+            let ad_controlnet_module = 'None'
+            if (data.controlnet_model?.includes('inpaint')) {
+                ad_controlnet_module = 'inpaint_global_harmonious'
+            }
+            const alwayson_scripts = {
+                ADetailer: {
+                    args: [
+                        data.is_enabled,
+                        {
+                            ad_model: data.ad_model,
+                            ad_prompt: data.prompt,
+                            ad_negative_prompt: data.negativePrompt,
+                            ad_confidence: data.ad_conf,
+                            ad_mask_min_ratio: 0.0,
+                            ad_mask_max_ratio: 1.0,
+                            ad_dilate_erode: 32,
+                            ad_x_offset: 0,
+                            ad_y_offset: 0,
+                            ad_mask_merge_invert: 'None',
+                            ad_mask_blur: 4,
+                            ad_denoising_strength: 0.4,
+                            ad_inpaint_only_masked: true,
+                            ad_inpaint_only_masked_padding: 0,
+                            ad_use_inpaint_width_height: false,
+                            ad_inpaint_width: 512,
+                            ad_inpaint_height: 512,
+                            ad_use_steps: true,
+                            ad_steps: 28,
+                            ad_use_cfg_scale: false,
+                            ad_cfg_scale: 7.0,
+                            ad_use_sampler: false,
+                            ad_sampler: sampler_name, //use the current sd sampler
+                            ad_use_noise_multiplier: false,
+                            ad_noise_multiplier: 1.0,
+                            ad_restore_face: false,
+
+                            ad_controlnet_model: data.controlnet_model,
+                            // ad_controlnet_module: data.controlnet_module,
+                            ad_controlnet_module: ad_controlnet_module,
+                            ad_controlnet_weight: data.controlNetWeight,
+                            ad_controlnet_guidance_start: 0.0,
+                            ad_controlnet_guidance_end: 1.0,
+                        },
+                    ],
+                },
+            }
+            if (!data?.is_installed) {
+                delete alwayson_scripts['ADetailer']
+            }
+            return alwayson_scripts
+        }
+
+        const alwyason_scripts = setAlwaysOnScripts()
+        payload['alwayson_scripts'] = {
+            ...(payload['alwayson_scripts'] || {}),
+            ...alwyason_scripts,
+        }
+
+        if (hi_res_fix && width >= 512 && height >= 512) {
+            payload['enable_hr'] = hi_res_fix
+            payload['hr_scale'] = sd_tab_store.data.hr_scale // Scale
+            payload['hr_upscaler'] = upscaler // Upscaler
+            payload['hr_second_pass_steps'] =
+                sd_tab_store.data.hr_second_pass_steps
+        }
+
+        const backend_type = html_manip.getBackendType()
+        if (backend_type === backendTypeEnum['Auto1111HordeExtension']) {
+            payload['script_name'] = script_horde.script_name
+            payload['script_args'] = script_horde.getScriptArgs()
+        } else if (
+            payload['script_name'] === script_horde.script_name &&
+            backend_type !== backendTypeEnum['Auto1111HordeExtension']
+        ) {
+            delete payload['script_name']
+            delete payload['script_args']
+        }
+
+        if (bUsePromptShortcut) {
+            //replace the prompt with the prompt shortcut equivalent
+            const [new_prompt, new_negative_prompt] =
+                py_re.replacePromptsWithShortcuts(
+                    prompt,
+                    negative_prompt,
+                    prompt_shortcut_ui_dict
+                )
+
+            //used in generation
+            payload['prompt'] = new_prompt
+            payload['negative_prompt'] = new_negative_prompt
+
+            //used to when resote settings from metadata
+            payload['original_prompt'] = prompt
+            payload['original_negative_prompt'] = negative_prompt
+        } else {
+            //use the same prompt as in the prompt textarea
+            payload['prompt'] = prompt
+            payload['negative_prompt'] = negative_prompt
+
+            payload['original_prompt'] = prompt
+            payload['original_negative_prompt'] = negative_prompt
+        }
+
+        payload['clip_skip'] =
+            settings_tab_ts.store.data.CLIP_stop_at_last_layers
+        payload = {
+            ...payload,
+            // prompt: prompt,
+            // negative_prompt: negative_prompt,
+            steps: sd_tab_store.data.steps,
+            // n_iter: numberOfImages,
+            sampler_index: sampler_name,
+            width: width,
+            height: height,
+            denoising_strength: denoising_strength,
+            batch_size: numberOfBatchSize,
+            cfg_scale: cfg_scale,
+            seed: seed.toString(),
+            mask_blur: 4, //mask_blur, // don't use auto1111 blur, instead use Auto-Photoshop-SD blur
+            use_sharp_mask: use_sharp_mask,
+            use_prompt_shortcut: bUsePromptShortcut,
+            prompt_shortcut_ui_dict: prompt_shortcut_ui_dict,
+            uniqueDocumentId: uniqueDocumentId,
+            mode: mode,
+            restore_faces: b_restore_faces,
+            tiling: sd_tab_store.data.tiling,
+            // script_args: script_args,
+            // script_name:"Run on Stable Horde"
+        }
+    } catch (e) {
+        console.error(e)
+    }
+    return payload
+}
+
 module.exports = {
     GenerationSession,
     GarbageCollectionState,
     SessionState,
+    getSettings,
 }

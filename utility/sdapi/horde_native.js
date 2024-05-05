@@ -57,17 +57,21 @@ class hordeGenerator {
     }
 
     async getSettings() {
-        const workers = await getWorkers()
+        try {
+            const workers = await getWorkers()
 
-        const workers_ids = getWorkerID(workers)
-        const settings = await getSettings()
-        this.plugin_settings = settings
-        let payload = await mapPluginSettingsToHorde(settings)
-        // payload['workers'] = workers_ids
-        payload['workers'] = []
+            const workers_ids = getWorkerID(workers)
+            const settings = await getSettings()
+            this.plugin_settings = settings
+            let payload = await mapPluginSettingsToHorde(settings)
+            // payload['workers'] = workers_ids
+            payload['workers'] = []
 
-        this.horde_settings = payload
-        return this.horde_settings
+            this.horde_settings = payload
+            return this.horde_settings
+        } catch (e) {
+            console.warn('getSettings: ', e)
+        }
     }
 
     /**
@@ -135,7 +139,7 @@ class hordeGenerator {
         const base64_image = _arrayBufferToBase64(image_buffer) //convert the buffer to base64
         //send the base64 to the server to save the file in the desired directory
         // await sdapi.requestSavePng(base64_image, image_name)
-        await saveFileInSubFolder(base64_image, document_name, image_name)
+        await io.saveFileInSubFolder(base64_image, document_name, image_name)
         return base64_image
     }
 
@@ -152,7 +156,7 @@ class hordeGenerator {
         const base64_image = _arrayBufferToBase64(image_buffer) //convert the buffer to base64
         //send the base64 to the server to save the file in the desired directory
         // await sdapi.requestSavePng(base64_image, image_name)
-        await saveFileInSubFolder(base64_image, document_name, image_name)
+        await io.saveFileInSubFolder(base64_image, document_name, image_name)
         return base64_image
     }
 
@@ -245,7 +249,7 @@ class hordeGenerator {
 
                 g_generation_session.base64OutputImages[path] =
                     image_info['base64']
-                await saveJsonFileInSubFolder(
+                await io.saveJsonFileInSubFolder(
                     this.plugin_settings,
                     document_name,
                     json_file_name
@@ -308,9 +312,7 @@ class hordeGenerator {
             console.warn(e)
         }
     }
-    async postGeneration() {
-        toggleTwoButtonsByClass(false, 'btnGenerateClass', 'btnInterruptClass')
-    }
+
     async processHordeResult() {
         //*) get the result from the horde server
         //*) save them locally to output directory
@@ -524,7 +526,7 @@ async function mapPluginSettingsToHorde(plugin_settings) {
     }
 
     let seed = ps['seed']
-    if (ps['seed'] === '-1') {
+    if (parseInt(ps['seed']) === -1) {
         const random_seed = Math.floor(Math.random() * 100000000000 + 1) // Date.now() doesn't have enough resolution to avoid duplicate
         seed = random_seed.toString()
     }
@@ -641,7 +643,7 @@ async function requestHorde(payload) {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
                 apikey: horde_api_key,
-                // 'Client-Agent': '4c79ab19-8e6c-4054-83b3-773b7ce71ece',
+
                 'Client-Agent': 'unknown:0:unknown',
             },
             body: JSON.stringify(payload),

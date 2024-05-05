@@ -1,10 +1,13 @@
 
 
 # Auto-Photoshop-StableDiffusion-Plugin
+[![Become a Patron!](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/AbdullahAlfaraj)
 [![discord badge]][discord link]
 
 [discord badge]: https://flat.badgen.net/discord/members/3mVEtrddXJ
 [discord link]: https://discord.gg/3mVEtrddXJ
+
+
 
 With Auto-Photoshop-StableDiffusion-Plugin, you can directly use the capabilities of Automatic1111 Stable Diffusion in Photoshop without switching between programs. This allows you to easily use Stable Diffusion AI in a familiar environment. You can edit your Stable Diffusion image with all your favorite tools and save it right in Photoshop.
 
@@ -12,6 +15,7 @@ With Auto-Photoshop-StableDiffusion-Plugin, you can directly use the capabilitie
 - [Auto-Photoshop-StableDiffusion-Plugin](#auto-photoshop-stablediffusion-plugin)
 - [Table of Contents](#table-of-contents)
 - [Demo:](#demo) 
+- [Support Us On Patreon](#support-us-on-patreon)
 - [How to Install](#how-to-install)
 	- [Method 1: One Click Installer](#method-1-one-click-installer)
 	- [Method 2: The Unzip Method](#method-2-the-unzip-method)
@@ -30,7 +34,157 @@ With Auto-Photoshop-StableDiffusion-Plugin, you can directly use the capabilitie
 	- [Stable Horde](#stable-horde)
 	- [Colab](#colab)
 	
-	
+# Support Us On Patreon:
+By supporting us on [Patreon](https://www.patreon.com/AbdullahAlfaraj), you’ll help us continue to develop and improve the Auto-Photoshop-StableDiffusion-Plugin, making it even easier for you to use Stable Diffusion AI in a familiar environment. As a supporter, you’ll have the opportunity to provide feedback and suggestions for future development. Plus, you’ll get early access to new features and tutorials, as well as exclusive art tutorials and tips from a professional artist. We’re passionate about making AI approachable to artists and with your help, we can continue to do just that.	
+# Auto-Photoshop-SD Backers and Sponsors:
+<h2>💎 Diamond</h2>
+<table>
+<tr>
+<td><a href="https://ronnykhalil.com/"><img src="https://images.weserv.nl/?url=https://raw.githubusercontent.com/AbdullahAlfaraj/Auto-Photoshop-StableDiffusion-Plugin/206b56c911f67ede3ca3a934d0bce8c1d68a2113/docs/profile_image/A934E4F0-7778-47E9-A395-531BFF2E61F1_1_105_c.jpeg&h=80&w=80&fit=cover&mask=circle&maxage=7d" alt="Ronny Khalil"></a></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=zachary" alt="zachary"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Razvan+Matei" alt="Razvan Matei"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=MasterAI" alt="MasterAI"></td>
+</tr>
+<tr>
+<td><a href="https://ronnykhalil.com/">Ronny Khalil</a></td>
+<td>zachary</td>
+<td>Razvan Matei</td>
+<td>MasterAI</td>
+</tr>
+</table>
+
+<h2>🥇 Gold</h2>
+<table>
+<tr>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Alex+" alt="Alex "></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Olivier+Lefebvre" alt="Olivier Lefebvre"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Arthur+Liu" alt="Arthur Liu"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Florin-Alexandru+Ilinescu" alt="Florin-Alexandru Ilinescu"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Zenko+" alt="Zenko "></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Juan+Pablo+Mendiola" alt="Juan Pablo Mendiola"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Robin+Edwards" alt="Robin Edwards"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Frederic+Dreuilhe" alt="Frederic Dreuilhe"></td>
+</tr>
+<tr>
+<td>Alex </td>
+<td>Olivier Lefebvre</td>
+<td>Arthur Liu</td>
+<td>Florin-Alexandru Ilinescu</td>
+<td>Zenko </td>
+<td>Juan Pablo Mendiola</td>
+<td>Robin Edwards</td>
+<td>Frederic Dreuilhe</td>
+</tr>
+<tr>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Danny+Sahagun" alt="Danny Sahagun"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=darius+coal" alt="darius coal"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Kerwin" alt="Kerwin"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=The+Dread+Vixen+Alinsa" alt="The Dread Vixen Alinsa"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Bruce+Hunter" alt="Bruce Hunter"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Chris+Canterbury" alt="Chris Canterbury"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Lawrence+L+Tran" alt="Lawrence L Tran"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Jake+Skokan" alt="Jake Skokan"></td>
+</tr>
+<tr>
+<td>Danny Sahagun</td>
+<td>darius coal</td>
+<td>Kerwin</td>
+<td>The Dread Vixen Alinsa</td>
+<td>Bruce Hunter</td>
+<td>Chris Canterbury</td>
+<td>Lawrence L Tran</td>
+<td>Jake Skokan</td>
+</tr>
+<tr>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=que0005" alt="que0005"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Xavier+Matia+Bernasconi" alt="Xavier Matia Bernasconi"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Mats+Oldin" alt="Mats Oldin"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Rodrigo+Terra" alt="Rodrigo Terra"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Nicolas+Meunier" alt="Nicolas Meunier"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Ihor+Pankin" alt="Ihor Pankin"></td>
+</tr>
+<tr>
+<td>que0005</td>
+<td>Xavier Matia Bernasconi</td>
+<td>Mats Oldin</td>
+<td>Rodrigo Terra</td>
+<td>Nicolas Meunier</td>
+<td>Ihor Pankin</td>
+</tr>
+</table>
+
+<h2>🥈 Silver</h2>
+<table>
+<tr>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Amith+Thomas" alt="Amith Thomas"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=xiao+yuan" alt="xiao yuan"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Ezra+Blake" alt="Ezra Blake"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Kevin+Schofield" alt="Kevin Schofield"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Mvs+Srs" alt="Mvs Srs"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Felipe+Cortes" alt="Felipe Cortes"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Smith" alt="Smith"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Sanchez" alt="Sanchez"></td>
+</tr>
+<tr>
+<td>Amith Thomas</td>
+<td>xiao yuan</td>
+<td>Ezra Blake</td>
+<td>Kevin Schofield</td>
+<td>Mvs Srs</td>
+<td>Felipe Cortes</td>
+<td>Smith</td>
+<td>Sanchez</td>
+</tr>
+<tr>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Ziui+Witter" alt="Ziui Witter"></td>
+</tr>
+<tr>
+<td>Ziui Witter</td>
+</tr>
+</table>
+
+<h2>🥉 Copper</h2>
+<table>
+<tr>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Sebastian+Karbowniczek" alt="Sebastian Karbowniczek"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Petter+Lundh" alt="Petter Lundh"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=AWWalker" alt="AWWalker"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=cdmusic" alt="cdmusic"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=Jason+Bessonette" alt="Jason Bessonette"></td>
+<td><img src="https://ui-avatars.com/api/?background=random&color=fff&rounded=true&name=22two+" alt="22two "></td>
+</tr>
+<tr>
+<td>Sebastian Karbowniczek</td>
+<td>Petter Lundh</td>
+<td>AWWalker</td>
+<td>cdmusic</td>
+<td>Jason Bessonette</td>
+<td>22two </td>
+</tr>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a href="https://www.patreon.com/AbdullahAlfaraj" rel="nofollow"><img src="docs/become_backer.svg" style="max-width: 100%;"></a>
+
+
 # How To Install: 
 Use method 1 or 2 if you are an Artist
 use method 3 if you are a Developer/Programmer 
@@ -44,7 +198,7 @@ use method 3 if you are a Developer/Programmer
 ![install_plugin_1](https://user-images.githubusercontent.com/7842232/217213943-3e2a588d-3ed8-4757-ba69-9846b55a1b36.gif)
 
 
-3) (optional step) Install the Auto-Photoshop-SD Extension from Automatic1111. the extension will allow you to use the smart masking and image search features
+3) (Don't skip) Install the `Auto-Photoshop-SD` Extension from Automatic1111 extension tab. The extension will allow you to use mask expansion and mask blur, which are necessary for achieving good results when outpainting and inpainting.
  - a) Copy Auto-Photoshop plugin url
 ![copy_githup_url_2](https://user-images.githubusercontent.com/7842232/217213998-367873ce-2c09-4c42-a5fa-0044415e3908.gif)
 
@@ -62,7 +216,8 @@ use method 3 if you are a Developer/Programmer
 1) Download the  [.zip](https://github.com/AbdullahAlfaraj/Auto-Photoshop-StableDiffusion-Plugin/releases/latest) file
 2) Unzip it in a folder with the same name
 3) move the unzipped folder to the Photoshop Plugin folder
-4) (optional step) Install the Auto-Photoshop-SD Extension from Automatic1111. the extension will allow you to use the smart masking and image search features	
+4) (Don't skip) Install the `Auto-Photoshop-SD` Extension from Automatic1111 extension tab. The extension will allow you to use mask expansion and mask blur, which are necessary for achieving good results when outpainting and inpainting.
+ - a) Copy Auto-Photoshop plugin url
 ![image](https://user-images.githubusercontent.com/7842232/223751539-1a3013aa-aa1d-4058-87ae-e8b3fdfc5ec8.png)
 
 
@@ -80,8 +235,17 @@ For artists we recommend you use [the one click installer](#one-click-installer)
 ```
 git clone https://github.com/AbdullahAlfaraj/Auto-Photoshop-StableDiffusion-Plugin.git
 ```
-2) run "start_server.bat" inside "Auto-Photoshop-StableDiffusion-Plugin" directory
-3) go to where you have [automatic1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui) installed. 
+2) open cmd window in the "Auto-Photoshop-StableDiffusion-Plugin" directory and then install the dependencies by typing:
+```
+npm install
+```
+3) build the plugin by transpiling typescript to javascript:
+```
+npm run watch
+```
+
+4) run "start_server.bat" inside "Auto-Photoshop-StableDiffusion-Plugin" directory
+5) go to where you have [automatic1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui) installed. 
 Edit the "webui-user.bat" in automatic1111 
  change this line 
 ```
@@ -93,12 +257,12 @@ set COMMANDLINE_ARGS= --api
 ```
 that will allow the plugin to communicate with the automatic1111 project. After saving close the "webui-user.bat" file and run it normally.
 
-4) run photoshop. go to edit -> prefrences -> plugins
+6) run photoshop. go to edit -> prefrences -> plugins
 	1) make sure you check "Enable Developer Mode" checkbox
-5) install "Adobe UXP Developer Tool" from here [Installation (adobe.com)](https://developer.adobe.com/photoshop/uxp/devtool/installation/)
+7) install "Adobe UXP Developer Tool" from here [Installation (adobe.com)](https://developer.adobe.com/photoshop/uxp/devtool/installation/)
    this tool will add the plugin into photoshop
-6) run Adobe UXP Developer Tool and click on "Add Plugin" button in the top right. Navigate to where you have "Auto-Photoshop-StableDiffusion-Plugin" folder and open "manifest.json"
-7) select the plugin and click on Actions -> Load Selected
+8) run Adobe UXP Developer Tool and click on "Add Plugin" button in the top right. Navigate to where you have "Auto-Photoshop-StableDiffusion-Plugin" folder and open "manifest.json"
+9) select the plugin and click on Actions -> Load Selected
 that's it.
 
 ## First time running the plugin (remote Automatic1111):
@@ -126,6 +290,7 @@ that's it.
 # Demo:
 [![Click Here to Watch Demo](https://i3.ytimg.com/vi/VL_gbQai79E/maxresdefault.jpg)](https://youtu.be/VL_gbQai79E "Stable diffusion AI Photoshop Plugin Free and Open Source")
 
+
 # FAQ and Known Issues
 ## What Photoshop version do I need to run the plugin?
 The minimum Photoshop version that the plugin supports is Photoshop v24
@@ -149,6 +314,6 @@ we provide two options to use the auto-photoshp plugin without GPU.
 ## Stable Horde
 This is an awesome free crowdsourced distributed cluster of Stable Diffusion workers. If you like this service, consider joining the horde yourself!
 the horde is enabled completely by the generosity of volunteers so make sure you don't overwhelm the service and help join the cause if you can.
-read more on their [github page](https://github.com/db0/AI-Horde)
+read more on their [GitHub page](https://github.com/db0/AI-Horde)
 ## Colab:
 we link to this [Colab](https://colab.research.google.com/drive/1nbcx_WOneRmYv9idBO33pN5CbxXrqZHu?usp=sharing#scrollTo=Y4ebYsPqTrGb) directly inside plugin find it in the settings tab. you only need to run it. no need to change any of the settings. copy the gradio.live url the colab will generate and paste it into ```sd url``` field in the settings tab.
